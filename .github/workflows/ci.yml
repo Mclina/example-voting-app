@@ -23,5 +23,5 @@ jobs:
         run: docker compose config --quiet
 
       - name: Build application images
-        run: docker compose build --parallel 1 vote result worker
+        run: docker compose build  vote result worker
 
