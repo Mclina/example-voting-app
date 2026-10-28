@@ -22,3 +22,6 @@ jobs:
       - name: Validate Compose configuration
         run: docker compose config --quiet
 
+      - name: Build application images
+        run: docker compose build --parallel 1 vote result worker
+
