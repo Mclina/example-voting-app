@@ -1,65 +1,143 @@
-# Example Voting App
+# Docker Voting App — DevOps Capstone
 
-A simple distributed application running across multiple Docker containers.
+A containerized voting application deployed locally using Docker Compose. This project explores multi-container orchestration, service dependencies, health checks, container networking, and persistent database storage.
 
-## Getting started
-
-Download [Docker Desktop](https://www.docker.com/products/docker-desktop) for Mac or Windows. [Docker Compose](https://docs.docker.com/compose) will be automatically installed. On Linux, make sure you have the latest version of [Compose](https://docs.docker.com/compose/install/).
-
-This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres for storage.
-
-Run in this directory to build and run the app:
-
-```shell
-docker compose up
-```
-
-The `vote` app will be running at [http://localhost:8080](http://localhost:8080), and the `results` will be at [http://localhost:8081](http://localhost:8081).
-
-Alternately, if you want to run it on a [Docker Swarm](https://docs.docker.com/engine/swarm/), first make sure you have a swarm. If you don't, run:
-
-```shell
-docker swarm init
-```
-
-Once you have your swarm, in this directory run:
-
-```shell
-docker stack deploy --compose-file docker-stack.yml vote
-```
-
-## Run the app in Kubernetes
-
-The folder k8s-specifications contains the YAML specifications of the Voting App's services.
-
-Run the following command to create the deployments and services. Note it will create these resources in your current namespace (`default` if you haven't changed it.)
-
-```shell
-kubectl create -f k8s-specifications/
-```
-
-The `vote` web app is then available on port 31000 on each host of the cluster, the `result` web app is available on port 31001.
-
-To remove them, run:
-
-```shell
-kubectl delete -f k8s-specifications/
-```
+This project is based on the [Docker Samples Example Voting App](https://github.com/dockersamples/example-voting-app). The original application and its components belong to their respective contributors.
 
 ## Architecture
 
-![Architecture diagram](architecture.excalidraw.png)
+The application consists of five main services:
 
-* A front-end web app in [Python](/vote) which lets you vote between two options
-* A [Redis](https://hub.docker.com/_/redis/) which collects new votes
-* A [.NET](/worker/) worker which consumes votes and stores them in…
-* A [Postgres](https://hub.docker.com/_/postgres/) database backed by a Docker volume
-* A [Node.js](/result) web app which shows the results of the voting in real time
+| Service | Technology | Responsibility |
+|---|---|---|
+| Vote | Python | Accepts votes through the web interface |
+| Result | Node.js | Displays voting results |
+| Worker | .NET | Processes votes and transfers them between services |
+| Redis | Redis | Temporarily stores votes |
+| Database | PostgreSQL 15 Alpine | Stores voting results persistently |
 
-## Notes
+### Request and data flow
 
-The voting application only accepts one vote per client browser. It does not register additional votes if a vote has already been submitted from a client.
+1. A user submits a vote through the Vote web application.
+2. Redis temporarily stores the submitted vote.
+3. The Worker processes votes from Redis and records them in PostgreSQL.
+4. The Result application reads the stored results and displays them to the user.
 
-This isn't an example of a properly architected perfectly designed distributed app... it's just a simple
-example of the various types of pieces and languages you might see (queues, persistent data, etc), and how to
-deal with them in Docker at a basic level.
+## Prerequisites
+
+- Docker Engine
+- Docker Compose
+- Git
+- A terminal with access to the Docker daemon
+
+## Run locally
+
+Clone your repository and enter the project directory:
+
+```bash
+git clone https://github.com/Mclina/example-voting-app.git
+cd example-voting-app
+```
+
+Build the application images and start the services:
+
+```bash
+sudo docker compose up -d --build
+```
+
+Check service status:
+
+```bash
+sudo docker compose ps
+```
+
+View application logs:
+
+```bash
+sudo docker compose logs --tail=50
+```
+
+## Access the application
+
+- **Voting interface:** http://localhost:8080
+- **Results interface:** http://localhost:8081
+
+Submit a vote through the voting interface, then visit the results page to verify that the result appears.
+
+## Health checks and networking
+
+Docker Compose defines health checks for the Vote, Redis, and PostgreSQL services. The Result service waits for PostgreSQL to become healthy, while the Worker waits for both Redis and PostgreSQL to become healthy.
+
+The application uses two Docker networks:
+
+- `front-tier` connects the web-facing Vote and Result services.
+- `back-tier` connects the application services to the supporting data services.
+
+PostgreSQL data is stored in the named Docker volume `db-data`, allowing database files to persist when the database container is recreated.
+
+## Troubleshooting
+
+Check service status:
+
+```bash
+sudo docker compose ps
+```
+
+Inspect database logs:
+
+```bash
+sudo docker compose logs --tail=80 db
+```
+
+Inspect the Worker logs:
+
+```bash
+sudo docker compose logs --tail=50 worker
+```
+
+Inspect the health status of the database:
+
+```bash
+sudo docker inspect example-voting-app-db-1 \
+  --format '{{json .State.Health}}'
+```
+
+If a dependency is initially unhealthy, inspect its logs and health status before attempting a restart or changing persistent data.
+
+## Stop the application
+
+Stop the services without intentionally removing the named database volume:
+
+```bash
+sudo docker compose down
+```
+
+To start them again:
+
+```bash
+sudo docker compose up -d
+```
+
+## Skills demonstrated
+
+- Docker image builds and multi-container deployments
+- Docker Compose orchestration
+- Container networking and service discovery
+- Health checks and dependency management
+- Redis and PostgreSQL integration
+- Persistent volumes
+- Application log inspection and troubleshooting
+- End-to-end functional verification
+
+## Future improvements
+
+- Add a GitHub Actions CI pipeline.
+- Add automated tests and image vulnerability scanning.
+- Improve monitoring and observability.
+- Evaluate deployment to Kubernetes.
+- Document architecture and deployment decisions.
+
+## Attribution
+
+This project is derived from the [Docker Samples Example Voting App](https://github.com/dockersamples/example-voting-app). Refer to the original repository and its license for attribution and licensing details.
+
