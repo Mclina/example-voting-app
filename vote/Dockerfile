@@ -9,6 +9,11 @@ RUN apt-get update && \
 # Set the application directory
 WORKDIR /usr/local/app
 
+# Upgrade Python packaging tools to patched versions
+RUN python -m pip install --no-cache-dir --upgrade \
+    "setuptools>=82.0.0" \
+    "wheel>=0.46.2"
+
 # Install our requirements.txt
 COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
