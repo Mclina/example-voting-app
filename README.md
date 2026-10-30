@@ -1,4 +1,11 @@
 # Docker Voting App — DevOps Capstone
+[![Voting App CI](https://github.com/Mclina/example-voting-app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Mclina/example-voting-app/actions/workflows/ci.yml)
+
+[![Build Vote](https://github.com/Mclina/example-voting-app/actions/workflows/call-docker-build-vote.yaml/badge.svg?branch=main)](https://github.com/Mclina/example-voting-app/actions/workflows/call-docker-build-vote.yaml)
+
+[![Build Result](https://github.com/Mclina/example-voting-app/actions/workflows/call-docker-build-result.yaml/badge.svg?branch=main)](https://github.com/Mclina/example-voting-app/actions/workflows/call-docker-build-result.yaml)
+
+[![Build Worker](https://github.com/Mclina/example-voting-app/actions/workflows/call-docker-build-worker.yaml/badge.svg?branch=main)](https://github.com/Mclina/example-voting-app/actions/workflows/call-docker-build-worker.yaml)
 
 A containerized voting application demonstrating DevOps practices through Docker, Docker Compose, GitHub Actions CI/CD, automated integration testing, and container vulnerability scanning.
 
