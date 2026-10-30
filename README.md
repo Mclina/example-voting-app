@@ -166,6 +166,21 @@ sudo docker compose logs --tail=50
 
 Submit a vote through the voting interface and visit the results page to see the updated results.
 
+
+## Application Screenshots
+
+### Voting Interface
+
+The voting page allows users to choose between Cats and Dogs.
+
+![Voting application interface](screenshots/vote.png)
+
+### Results Interface
+
+The results page displays the voting outcome.
+
+![Voting results interface](screenshots/result.png)
+
 ## Testing
 
 ### Manual endpoint testing
