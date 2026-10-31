@@ -26,6 +26,10 @@ The project focuses on:
 - Container image vulnerability scanning with Trivy.
 - Dependency and runtime security improvements.
 
+## Project Demonstration
+
+[▶ Watch Docker Voting App Demo](https://drive.google.com/file/d/1-XRrpIc9nFnjfg43cudmH18h4pc7qcgq/view?usp=sharing)
+
 ## Architecture
 
 The application consists of five services:
