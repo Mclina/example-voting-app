@@ -245,6 +245,84 @@ The images are published to GitHub Container Registry (GHCR).
 
 The build workflows use multi-platform builds where supported by the respective application images.
 
+
+## Infrastructure as Code
+
+The project demonstrates Infrastructure as Code using Terraform and Helm.
+
+### Terraform
+
+Terraform provisions a local Nginx Docker container using the Docker provider.
+
+The configuration is located in the `terraform/` directory.
+
+To validate and provision the infrastructure:
+
+```bash
+cd terraform
+terraform init
+terraform fmt
+terraform validate
+terraform plan
+terraform apply
+```
+
+The Nginx container is accessible at `http://localhost:8082`.
+
+To remove the Terraform-managed resources when finished:
+
+```bash
+terraform destroy
+```
+
+This is a local Docker infrastructure demonstration, not an AWS cloud deployment.
+
+### Helm and Kubernetes
+
+The `helm/` directory contains a Helm chart for deploying the Voting App components to Kubernetes.
+
+The chart defines:
+
+- Vote Deployment and Service
+- Result Deployment and Service
+- Worker Deployment
+- Redis Deployment and Service
+- PostgreSQL Deployment and Service
+
+The Vote and Result services use NodePort, while Redis and PostgreSQL use internal ClusterIP services.
+
+PostgreSQL uses an existing Kubernetes Secret named `voting-app-db` for its password.
+
+Create the Secret before installing the chart:
+
+```bash
+kubectl create secret generic voting-app-db \
+  --from-literal=POSTGRES_PASSWORD='replace-with-a-secure-password'
+```
+
+Validate and render the chart:
+
+```bash
+helm lint helm
+helm template voting-app ./helm
+```
+
+Install the chart into a Kubernetes cluster:
+
+```bash
+helm install voting-app ./helm
+```
+
+Check deployed resources:
+
+```bash
+kubectl get deployments
+kubectl get services
+kubectl get pods
+```
+
+**Note:** Helm linting and template rendering have been verified. A live Kubernetes deployment has not yet been performed. Redis and PostgreSQL use `emptyDir` temporary storage, which is not suitable for production persistence.
+
 ## Container Security and Vulnerability Remediation
 
 Trivy is used to scan container images for operating-system and application dependency vulnerabilities.
