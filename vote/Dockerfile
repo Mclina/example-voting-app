@@ -1,5 +1,5 @@
 # base defines a base stage that uses the official python runtime base image
-FROM python:3.11-slim AS base
+FROM python:3.11-slim@sha256:673719e071ecf27434fd2635bbd8d00f49f4fdd81f243143438a42ced8bedf60 AS base
 
 # Add curl for healthcheck
 RUN apt-get update && \
@@ -27,8 +27,14 @@ CMD ["python", "app.py"]
 # final defines the stage that will bundle the application for production
 FROM base AS final
 
-# Copy our code from the current folder to the working directory inside the container
-COPY . .
+# Create a non-root user
+RUN useradd --create-home --shell /bin/bash appuser
+
+# Copy application files and assign ownership
+COPY --chown=appuser:appuser . .
+
+# Run the application as a non-root user
+USER appuser
 
 # Make port 80 available for links and/or publish
 EXPOSE 80
