@@ -20,6 +20,7 @@ on:
 
 jobs:
   call-docker-build:
+    if: github.event_name == 'push'
 
     name: Result Call Docker Build
 
@@ -49,6 +50,7 @@ jobs:
       ### https://github.com/docker/metadata-action#tags-input
       ### defaults to:
       tag-rules: |
+        type=sha,format=long
         type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
         type=raw,value=before,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
         type=raw,value=after,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
