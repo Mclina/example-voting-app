@@ -14,7 +14,7 @@ result:
   replicaCount: 1
   image:
     repository: ghcr.io/mclina/example-voting-app-result
-    tag: sha-5d72f4282b3e71ba6c3d4061931c2e0a00169879
+    tag: sha-ad49c4f9e25f610340c5056f55ece84664234465
     pullPolicy: IfNotPresent
   service:
     type: NodePort
@@ -26,7 +26,7 @@ worker:
   replicaCount: 1
   image:
     repository: ghcr.io/mclina/example-voting-app-worker
-    tag: sha-5d72f4282b3e71ba6c3d4061931c2e0a00169879
+    tag: sha-ad49c4f9e25f610340c5056f55ece84664234465
     pullPolicy: IfNotPresent
 
 redis:
