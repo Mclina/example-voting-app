@@ -1,8 +1,8 @@
 vote:
   replicaCount: 1
   image:
-    repository: dockersamples/examplevotingapp_vote
-    tag: latest
+    repository: ghcr.io/mclina/example-voting-app-vote
+    tag: sha-5d72f4282b3e71ba6c3d4061931c2e0a00169879
     pullPolicy: IfNotPresent
   service:
     type: NodePort
@@ -13,8 +13,8 @@ vote:
 result:
   replicaCount: 1
   image:
-    repository: dockersamples/examplevotingapp_result
-    tag: latest
+    repository: ghcr.io/mclina/example-voting-app-result
+    tag: sha-5d72f4282b3e71ba6c3d4061931c2e0a00169879
     pullPolicy: IfNotPresent
   service:
     type: NodePort
@@ -25,8 +25,8 @@ result:
 worker:
   replicaCount: 1
   image:
-    repository: dockersamples/examplevotingapp_worker
-    tag: latest
+    repository: ghcr.io/mclina/example-voting-app-worker
+    tag: sha-5d72f4282b3e71ba6c3d4061931c2e0a00169879
     pullPolicy: IfNotPresent
 
 redis:

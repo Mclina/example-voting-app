@@ -19,6 +19,16 @@ spec:
         - name: result
           image: "{{ .Values.result.image.repository }}:{{ .Values.result.image.tag }}"
           imagePullPolicy: {{ .Values.result.image.pullPolicy }}
+          env:
+            - name: DB_HOST
+              value: "db"
+            - name: POSTGRES_USER
+              value: {{ .Values.db.username | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.db.existingSecret }}
+                  key: {{ .Values.db.passwordKey }}
           ports:
             - name: result
               containerPort: 80
